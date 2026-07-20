@@ -25,7 +25,7 @@ test('Завершение задачи', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
     const nameOfTask = 'Task';
     await newTodo.fill(nameOfTask);
-    // await newTodo.press('Enter');
+    await newTodo.press('Enter');
 
     await expect(page.getByText(nameOfTask)).toBeVisible();
     await expect(page.locator('.todo-list').getByRole('listitem')).toHaveText(`Task`)
