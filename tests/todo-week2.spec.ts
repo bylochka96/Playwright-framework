@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
 
 })
 
-test('Добавление трёх задач', async ({ page }) => {
+test('User can add three tasks', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
     const countOfTasks = 3;
     for (let i = 1; i <= countOfTasks; i++) {
@@ -21,7 +21,7 @@ test('Добавление трёх задач', async ({ page }) => {
 })
 
 
-test('Завершение задачи', async ({ page }) => {
+test('User can complete a task', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
     const nameOfTask = 'Task';
     await newTodo.fill(nameOfTask);
@@ -37,7 +37,7 @@ test('Завершение задачи', async ({ page }) => {
 })
 
 
-test('Фильтрация задач', async ({ page }) => {
+test('User can filter tasks', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
     const countOfTasks = 2;
     for (let i = 1; i <= countOfTasks; i++) {
@@ -65,7 +65,7 @@ test('Фильтрация задач', async ({ page }) => {
     await expect(page.locator('.todo-list').getByRole('listitem')).toHaveCount(2)
 })
 
-test('Редактирование задачи', async ({ page }) => {
+test('User can edit a task', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
     const nameOfTask = 'first name of the Task';
     await newTodo.fill(nameOfTask);
@@ -82,7 +82,7 @@ test('Редактирование задачи', async ({ page }) => {
 })
 
 
-test('Удаление завершённых задач', async ({ page }) => {
+test('User can clear completed tasks', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
     const countOfTasks = 3;
     for (let i = 1; i <= countOfTasks; i++) {

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 
-test('Пользователь может добавить задачу', async ({ page }) => {
+test('User can add a task', async ({ page }) => {
 
     await page.goto('https://demo.playwright.dev/todomvc/')
     await expect(page).toHaveTitle(/React • TodoMVC/);
@@ -15,7 +15,7 @@ test('Пользователь может добавить задачу', async 
 
 })
 
-test('Пользователь добавляет две задачи', async ({ page }) => {
+test('User can add two tasks', async ({ page }) => {
     await page.goto('https://demo.playwright.dev/todomvc/')
     await expect(page).toHaveTitle(/React • TodoMVC/);
 
