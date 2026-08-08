@@ -5,7 +5,12 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('Dynamic ID', async ({ page }) => {
-   await page.getByRole('heading', { name: 'Dynamic ID' }).click();
+    const dynamicIdHeading = page.getByRole('heading', { name: 'Dynamic ID' });
+    await expect(dynamicIdHeading).toBeVisible();
+    await dynamicIdHeading.click();
+
+    // use the role locator to click the button with dynamic id,
+    // because the id is dynamic and changes on every page load
     await page.getByRole('button', { name: 'Button with Dynamic ID' }).click();
 })
 
@@ -17,7 +22,7 @@ test('Verify Text', async ({ page }) => {
 test('Dynamic Table', async ({ page }) => {
     await page.getByRole('heading', { name: 'Dynamic Table' }).click();
     
-    const cpuCellText = page
+    const cpuCellText = await page
         .getByRole('row')
         .filter({ hasText: 'Chrome' })
         .getByRole('cell', { name: /^\d+(?:\.\d+)?%$/ })

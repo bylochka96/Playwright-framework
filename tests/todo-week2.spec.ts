@@ -12,73 +12,85 @@ test('User can add three tasks', async ({ page }) => {
     for (let i = 1; i <= countOfTasks; i++) {
         await newTodo.fill(`Task ${i}`);
         await newTodo.press('Enter');
-        await expect(page.getByText(`Task ${i}`)).toBeVisible();
-        await expect(page.locator('.todo-list').getByRole('listitem').nth(i - 1)).toHaveText(`Task ${i}`)
+        await expect(page.getByRole('listitem').filter({has: page.getByText(`Task ${i}`, { exact: true })})).toBeVisible();
+
     }
 
-    await expect(page.locator('.todo-list').getByRole('listitem')).toHaveCount(countOfTasks);
-    await expect(page.locator('.todo-count')).toContainText(`${countOfTasks} items left`)
+    await expect(page.getByRole('listitem').filter({has: page.getByRole('checkbox')})).toHaveCount(countOfTasks);
+    await expect(page.getByText(`${countOfTasks} items left`)).toBeVisible();
 })
 
 
 test('User can complete a task', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
-    const nameOfTask = 'Task';
-    await newTodo.fill(nameOfTask);
-    await newTodo.press('Enter');
+    const countOfTasks = 2;
+    for (let i = 1; i <= countOfTasks; i++) {
+        await newTodo.fill(`Task ${i}`);
+        await newTodo.press('Enter');
+        await expect(page.getByRole('listitem').filter({has: page.getByText(`Task ${i}`, { exact: true })})).toBeVisible();
 
-    await expect(page.getByText(nameOfTask)).toBeVisible();
-    await expect(page.locator('.todo-list').getByRole('listitem')).toHaveText(`Task`)
+    }
 
-    await page.locator('.todo-list').getByRole('listitem').getByRole('checkbox').check();
-    await expect(page.locator('.todo-list').getByRole('listitem').getByRole('checkbox')).toBeChecked()
-    await expect(page.locator('.todo-count')).toContainText('0 items left')
+    await page.getByRole('listitem').filter({has: page.getByText('Task 1', { exact: true })}).getByRole('checkbox').check();
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 1', { exact: true })}).getByRole('checkbox')).toBeChecked()
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 2', { exact: true })}).getByRole('checkbox')).not.toBeChecked()
+    await expect(page.getByText('1 item left')).toBeVisible();
+
 
 })
 
 
 test('User can filter tasks', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
-    const countOfTasks = 2;
+    const countOfTasks = 3;
     for (let i = 1; i <= countOfTasks; i++) {
         await newTodo.fill(`Task ${i}`);
         await newTodo.press('Enter');
-        await expect(page.getByText(`Task ${i}`)).toBeVisible();
-        await expect(page.locator('.todo-list').getByRole('listitem').nth(i - 1)).toHaveText(`Task ${i}`)
+       await expect(page.getByRole('listitem').filter({has: page.getByText(`Task ${i}`, { exact: true })})).toBeVisible();
     }
 
-    await page.locator('.todo-list').getByRole('listitem').getByRole('checkbox').first().check();
-    await expect(page.locator('.todo-list').getByRole('listitem').getByRole('checkbox').first()).toBeChecked()
-    await expect(page.locator('.todo-list').getByRole('listitem').getByRole('checkbox').last()).not.toBeChecked()
+    await page.getByRole('listitem').filter({has: page.getByText('Task 1', { exact: true })}).getByRole('checkbox').check();
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 1', { exact: true })}).getByRole('checkbox')).toBeChecked()
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 2', { exact: true })}).getByRole('checkbox')).not.toBeChecked()
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 3', { exact: true })}).getByRole('checkbox')).not.toBeChecked()
 
     await page.getByRole('link', { name: 'Active' }).click();
-    await expect(page.locator('.todo-list').getByRole('listitem').first()).toHaveText('Task 2')
-    await expect(page.locator('.todo-list').getByRole('listitem')).toHaveCount(1)
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 3', { exact: true })})).toBeVisible();
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 2', { exact: true })})).toBeVisible();
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 1', { exact: true })})).not.toBeVisible();
+    await expect(page.getByRole('listitem').filter({has: page.getByRole('checkbox')})).toHaveCount(2);
     await expect(page).toHaveURL(/active/)
 
     await page.getByRole('link', { name: 'Completed' }).click();
-    await expect(page.locator('.todo-list').getByRole('listitem').first()).toHaveText('Task 1')
-    await expect(page.locator('.todo-list').getByRole('listitem')).toHaveCount(1)
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 1', { exact: true })})).toBeVisible();
+    await expect(page.getByRole('listitem').filter({has: page.getByRole('checkbox')})).toHaveCount(1);
     await expect(page).toHaveURL(/completed/)
 
     await page.getByRole('link', { name: 'All' }).click();
-    await expect(page.locator('.todo-list').getByRole('listitem')).toHaveCount(2)
+    for (let i = 1; i <= countOfTasks; i++) {
+       await expect(page.getByRole('listitem').filter({has: page.getByText(`Task ${i}`, { exact: true })})).toBeVisible();
+    }
+    await expect(page.getByRole('listitem').filter({has: page.getByRole('checkbox')})).toHaveCount(countOfTasks)
 })
 
 test('User can edit a task', async ({ page }) => {
     const newTodo = page.getByPlaceholder('What needs to be done?');
-    const nameOfTask = 'first name of the Task';
-    await newTodo.fill(nameOfTask);
-    await newTodo.press('Enter');
+    const countOfTasks = 2;
+    for (let i = 1; i <= countOfTasks; i++) {
+        await newTodo.fill(`Task ${i}`);
+        await newTodo.press('Enter');
+        await expect(page.getByRole('listitem').filter({has: page.getByText(`Task ${i}`, { exact: true })})).toBeVisible();
 
-    await expect(page.getByText(nameOfTask)).toBeVisible();
+    }
 
-    await page.locator('.todo-list').getByRole('listitem').dblclick();
-    const editInput = page.locator('.todo-list').getByRole('listitem').getByRole('textbox');
+    const taskToEdit = page.getByRole('listitem').filter({has: page.getByText('Task 1', { exact: true })});
+    await taskToEdit.dblclick();
+    const editInput = taskToEdit.getByRole('textbox');
     await editInput.fill('Edited Task');
     await editInput.press('Enter');
     await expect(page.getByText('Edited Task')).toBeVisible();
-    await expect(page.getByText('first name of the Task')).not.toBeVisible();
+    await expect(page.getByText('Task 1')).not.toBeVisible();
+    await expect(page.getByText('Task 2')).toBeVisible();
 })
 
 
@@ -88,23 +100,24 @@ test('User can clear completed tasks', async ({ page }) => {
     for (let i = 1; i <= countOfTasks; i++) {
         await newTodo.fill(`Task ${i}`);
         await newTodo.press('Enter');
-        await expect(page.getByText(`Task ${i}`)).toBeVisible();
-        await expect(page.locator('.todo-list').getByRole('listitem').nth(i - 1)).toHaveText(`Task ${i}`)
-    }
-    await expect(page.locator('.todo-count')).toContainText(`${countOfTasks} items left`)
+        await expect(page.getByRole('listitem').filter({has: page.getByText(`Task ${i}`, { exact: true })})).toBeVisible();
 
-    await page.locator('.todo-list').getByRole('listitem').getByRole('checkbox').first().check();
-    await expect(page.locator('.todo-list').getByRole('listitem').getByRole('checkbox').first()).toBeChecked()
-    await page.locator('.todo-list').getByRole('listitem').getByRole('checkbox').nth(1).check();
-    await expect(page.locator('.todo-list').getByRole('listitem').getByRole('checkbox').nth(1)).toBeChecked()
+    }
+    await expect(page.getByText('3 items left')).toBeVisible();
+
+
+     for (let i = 1; i <= 2; i++) {
+       await page.getByRole('listitem').filter({has: page.getByText(`Task ${i}`, { exact: true })}).getByRole('checkbox').check();
+    await expect(page.getByRole('listitem').filter({has: page.getByText(`Task ${i}`, { exact: true })}).getByRole('checkbox')).toBeChecked()
+
+    }
+
     const btnClearCompleted = page.getByRole('button', { name: 'Clear completed' });
 
     await expect(btnClearCompleted).toBeVisible();
     await btnClearCompleted.click();
-    await expect(page.locator('.todo-list').getByRole('listitem')).toHaveCount(1)
-    await expect(page.locator('.todo-count')).toContainText('1 item left')
-
-    await expect(page.locator('.todo-list').getByRole('listitem')).toHaveText('Task 3')
-    await expect(page.getByText('Task 1')).not.toBeVisible();
-    await expect(page.getByText('Task 2')).not.toBeVisible();
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 3', { exact: true })})).toBeVisible();
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 1', { exact: true })})).not.toBeVisible();
+    await expect(page.getByRole('listitem').filter({has: page.getByText('Task 2', { exact: true })})).not.toBeVisible();
+    await expect(page.getByText('1 item left')).toBeVisible();
 })
