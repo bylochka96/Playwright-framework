@@ -23,7 +23,4 @@ export class LoginPage {
         await this.loginButton.click();
     }
 
-    // async getUrl(): Promise<string> {
-    //     return this.page.url();
-    // }
 }
