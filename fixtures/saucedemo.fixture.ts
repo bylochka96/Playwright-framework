@@ -7,7 +7,7 @@ import { InventoryPage } from '../pages/saucedemo/inventory.page';
 type Fixtures = {
     loginPage: LoginPage;
     authenticatedPage: Page;
-    cartPageWithProduct: CartPage;
+    cartPageWithBackpack: CartPage;
 };
 
 export const test = base.extend<Fixtures>({
@@ -30,19 +30,21 @@ export const test = base.extend<Fixtures>({
         await use(page);
     },
 
-    cartPageWithProduct: async ({ authenticatedPage }: { authenticatedPage: Page }, use: (cartPageWithProduct: CartPage) => Promise<void>) => {
-
+    cartPageWithBackpack: async ({ authenticatedPage }: { authenticatedPage: Page }, use: (cartPageWithBackpack: CartPage) => Promise<void>) => {
+        const productName = 'Sauce Labs Backpack';
         const inventoryPage = new InventoryPage(authenticatedPage);
 
-        await inventoryPage.addProductToCart('Sauce Labs Backpack');
+        await inventoryPage.addProductToCart(productName);
         await expect(inventoryPage.cartBadge).toHaveText('1');
 
         await inventoryPage.cart.click();
         await expect(authenticatedPage).toHaveURL('/cart.html');
 
-        const cartPageWithProduct = new CartPage(authenticatedPage);
-       
-        await use(cartPageWithProduct);
+        const cartPageWithBackpack = new CartPage(authenticatedPage);
+
+        await expect(await cartPageWithBackpack.findProduct(productName)).toBeVisible();
+
+        await use(cartPageWithBackpack);
     }
 
 });
