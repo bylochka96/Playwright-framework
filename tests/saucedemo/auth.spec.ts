@@ -3,6 +3,7 @@ import { test, expect } from '../../fixtures/saucedemo.fixture';
 
 test.describe('Login functionality', () => {
 
+    
     test('User can log in with valid credentials', async ({ loginPage, page }) => {
 
         await loginPage.login('standard_user', 'secret_sauce');

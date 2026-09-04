@@ -36,9 +36,64 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'setup',
+      // testMatch: /.*setup\.ts/,
+      testMatch: '**/setup/*.setup.ts',
     },
+  
+    {
+      name: 'chromium-non-authenticated',
+      testMatch: '**/saucedemo/auth.spec.ts',
+      use: { 
+        ...devices['Desktop Chrome'],
+      },
+    },
+
+    {
+      name: 'chromium-authenticated',
+      testMatch: [
+        '**/saucedemo/inventory.spec.ts',
+        '**/saucedemo/cart.spec.ts',
+        '**/saucedemo/checkout.spec.ts',
+      ],
+      use: { 
+        ...devices['Desktop Chrome'],
+        storageState: '.auth/standard_user.json'
+      },
+      dependencies: ['setup'],
+    },
+
+    {
+      name: 'chromium-problem-user',
+      testMatch: [
+        '**/saucedemo/problem-user.spec.ts',
+      ],
+      use: { 
+        ...devices['Desktop Chrome'],
+        storageState: '.auth/problem_user.json'
+      },
+      dependencies: ['setup'],
+    },
+
+    {
+      name: 'api',
+      testMatch: '**/api/**/*.spec.ts',
+      use: {
+        baseURL: 'https://jsonplaceholder.typicode.com',
+      }
+    },
+
+    {
+      name: 'learning',
+      testMatch: [
+        '**/todo-week1.spec.ts',
+        '**/todo-week2.spec.ts',
+        '**/locators-week3.spec.ts',
+      ],
+      use: {
+          ...devices['Desktop Chrome'],
+      },
+    }
 
     // {
     //   name: 'firefox',

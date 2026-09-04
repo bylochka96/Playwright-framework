@@ -26,7 +26,17 @@ export const invalidLoginData = [
     },
 ];
 
-export const validLoginData = {
-    username: 'standard_user',
-    password: 'secret_sauce'
-};
+export const authenticatedUsers = [
+    {
+        name: 'standard user',
+        username: 'standard_user',
+        password: 'secret_sauce',
+        authFilePath: '.auth/standard_user.json'
+    },
+    {
+        name: 'problem user',
+        username: 'problem_user',
+        password: 'secret_sauce',
+        authFilePath: '.auth/problem_user.json'
+    },
+];

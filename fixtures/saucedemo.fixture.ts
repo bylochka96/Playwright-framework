@@ -1,5 +1,4 @@
 import { test as base, expect, Page } from '@playwright/test';
-import { validLoginData } from '../test-data/login-data';
 import { LoginPage } from '../pages/saucedemo/login.page';
 import { CartPage } from '../pages/saucedemo/cart.page';
 import { InventoryPage } from '../pages/saucedemo/inventory.page';
@@ -20,10 +19,7 @@ export const test = base.extend<Fixtures>({
     },
 
     authenticatedPage: async ({ page }, use) => {
-        const loginPage = new LoginPage(page);
-
-        await loginPage.open();
-        await loginPage.login(validLoginData.username, validLoginData.password);
+        await page.goto('/inventory.html');
 
         await expect(page).toHaveURL('/inventory.html');
 
